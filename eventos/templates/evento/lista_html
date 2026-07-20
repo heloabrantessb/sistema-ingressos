@@ -1,0 +1,90 @@
+{% extends 'eventos/base.html' %}
+
+{% block title %}Vitrine de Eventos - Ticketfy{% endblock %}
+
+{% block content %}
+<div class="row mb-4 align-items-center">
+    <div class="col-md-8">
+        <h1 class="fw-bold text-dark">Próximos Eventos</h1>
+        <p class="text-muted">Garanta seu ingresso antecipadamente antes que esgote!</p>
+    </div>
+</div>
+
+<div class="row g-4">
+    {% for evento in eventos %}
+        <div class="col-12 col-md-6 col-lg-4">
+            <div class="card h-100 shadow-sm border-0 rounded-3 overflow-hidden">
+                
+                <!-- Imagem de Capa do Evento -->
+                {% if evento.imagem %}
+                    <img src="{{ evento.imagem.url }}" class="card-img-top" alt="{{ evento.titulo }}" style="height: 200px; object-fit: cover;">
+                {% else %}
+                    <div class="bg-secondary text-white d-flex align-items-center justify-content-center" style="height: 200px;">
+                        <i class="bi bi-image fs-1 text-light opacity-50"></i>
+                    </div>
+                {% endif %}
+
+                <div class="card-body d-flex flex-column">
+                    <!-- Título -->
+                    <h5 class="card-title fw-bold text-dark mb-2">{{ evento.titulo }}</h5>
+                    
+                    <!-- Data e Horário -->
+                    <p class="card-text text-muted small mb-2">
+                        <i class="bi bi-calendar3 me-1 text-primary"></i> 
+                        {{ evento.data_evento|date:"d/m/Y \à\s H:i" }}
+                    </p>
+
+                    <!-- Descrição Curta -->
+                    <p class="card-text text-secondary small flex-grow-1">
+                        {{ evento.descricao|truncatewords:20 }}
+                    </p>
+
+                    <hr class="text-muted opacity-25">
+
+                    <!-- Informações de Preço e Estoque -->
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <div>
+                            <span class="d-block small text-muted">A partir de</span>
+                            <span class="fs-5 fw-bold text-success">R$ {{ evento.preco|floatformat:2 }}</span>
+                        </div>
+                        <div>
+                            {% if evento.estoque > 0 %}
+                                <span class="badge bg-success-subtle text-success border border-success-subtle">
+                                    <i class="bi bi-ticket-fill me-1"></i>{{ evento.estoque }} restantes
+                                </span>
+                            {% else %}
+                                <span class="badge bg-danger-subtle text-danger border border-danger-subtle">
+                                    <i class="bi bi-x-circle-fill me-1"></i>Esgotado
+                                </span>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <!-- Botão de Ação -->
+                    {% if evento.estoque > 0 %}
+                        <a href="{% url 'detalhe_evento' evento.pk %}" class="btn btn-primary w-100 fw-semibold">
+                            Garantir Ingresso <i class="bi bi-arrow-right ms-1"></i>
+                        </a>
+                    {% else %}
+                        <button class="btn btn-secondary w-100 fw-semibold" disabled>
+                            Ingressos Esgotados
+                        </button>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    {% empty %}
+        <!-- Mensagem para quando não houver eventos cadastrados -->
+        <div class="col-12">
+            <div class="text-center py-5 bg-white rounded-3 shadow-sm border">
+                <i class="bi bi-calendar-x fs-1 text-muted"></i>
+                <h4 class="mt-3 text-secondary">Nenhum evento disponível no momento</h4>
+                <p class="text-muted">Acesse o painel administrativo para cadastrar novos eventos.</p>
+                <a href="/admin/" target="_blank" class="btn btn-outline-primary mt-2">
+                    <i class="bi bi-plus-circle me-1"></i> Cadastrar Evento
+                </a>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+{% endblock %}
