@@ -1,4 +1,5 @@
 from django.db import models
+import uuid
 
 class Evento(models.Model):
     titulo = models.CharField(max_length=200)
@@ -20,7 +21,7 @@ class Comprador(models.Model):
 class Ingresso(models.Model):
     evento = models.ForeignKey(Evento, on_delete=models.CASCADE)
     comprador = models.ForeignKey(Comprador, on_delete=models.CASCADE)
-    codigo_validacao = models.UUIDField(max_length=100, unique=True)
+    codigo_validacao = models.UUIDField(max_length=100, unique=True, default=uuid.uuid4())
     comprado_em = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
