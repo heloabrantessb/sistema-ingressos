@@ -3,11 +3,11 @@ version: '3.8'
 services:
   db:
     image: postgres:15-alpine
-    container_name: quiz_postgres
+    container_name: ingressos_postgres
     restart: always
     environment:
-      POSTGRES_DB: quiz_db
-      POSTGRES_USER: quiz_user
+      POSTGRES_DB: ingressos_db
+      POSTGRES_USER: ingressos_user
       POSTGRES_PASSWORD: password
     ports:
       - "5432:5432"

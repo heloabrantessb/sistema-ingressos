@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'eventos'
 ]
 
 MIDDLEWARE = [
@@ -75,8 +76,8 @@ WSGI_APPLICATION = 'core.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.environ.get('DB_NAME', 'quiz_db'),
-        'USER': os.environ.get('DB_USER', 'quiz_user'),
+        'NAME': os.environ.get('DB_NAME', 'ingressos_db'),
+        'USER': os.environ.get('DB_USER', 'ingressos_user'),
         'PASSWORD': os.environ.get('DB_PASSWORD', 'password'),
         'HOST': os.environ.get('DB_HOST', 'localhost'),
         'PORT': os.environ.get('DB_PORT', '5432')
