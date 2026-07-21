@@ -50,8 +50,8 @@ class Pedido(models.Model):
 class Ingresso(models.Model):
     pedido = models.ForeignKey(Pedido, on_delete=models.CASCADE)
     tipo_ingresso = models.ForeignKey(TipoIngresso, on_delete=models.CASCADE)
-    codigo_validacao = models.UUIDField(unique=True, default=uuid.uuid4())
+    codigo_validacao = models.UUIDField(unique=True, default=uuid.uuid4)
     emitido_em = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"Ingresso para {self.pedido.evento.titulo} - Comprador: {self.pedido.comprador.nome}"
+        return f"Ingresso para {self.pedido.evento.titulo} - Comprador: {self.pedido.comprador.nome_completo}"

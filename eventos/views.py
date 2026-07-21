@@ -1,7 +1,10 @@
-from django.shortcuts import get_object_or_404, render
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
+from django.shortcuts import get_object_or_404, render, redirect
 from .models import Evento, Ingresso 
+
+def home(request):
+    return redirect('index')
 
 def index(request):
     eventos = Evento.objects.all()
