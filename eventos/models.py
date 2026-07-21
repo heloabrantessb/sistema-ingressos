@@ -31,12 +31,15 @@ class Comprador(models.Model):
         return f"{self.nome_completo} - {self.user.username}"
 
 class Pedido(models.Model):
+
+    class Status(models.TextChoices):
+        PENDENTE = 'pendente'
+        PAGO = 'pago'
+        CANCELADO = 'cancelado'
+
     comprador = models.ForeignKey(Comprador, on_delete=models.CASCADE)
     evento = models.ForeignKey(Evento, on_delete=models.CASCADE)
-    status = models.CharField(max_length=20, choices=[
-        ('pendente', 'Pendente'), 
-        ('pago', 'Pago'), 
-        ('cancelado', 'Cancelado')])
+    status = models.CharField(max_length=20, choices=Status.choices)
     valor_total = models.DecimalField(max_digits=10, decimal_places=2)
     data_criacao = models.DateTimeField(auto_now_add=True)
     pago_em = models.DateTimeField(null=True, blank=True)
