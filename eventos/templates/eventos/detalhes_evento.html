@@ -27,9 +27,16 @@
         <div class="card-footer text-muted d-flex justify-content-between">
             <small>Criado em: {{ evento.criado_em|date:"d/m/Y" }}</small>
         </div>
-        <div>
-            <a href="{% url 'comprar_ingresso' evento.id %}">Comprar Ingresso</a>
-        </div>
+        {% if user.is_authenticated %}
+            <div class="card-footer">
+                <a href="{% url 'comprar_ingresso' evento.id %}" class="btn btn-primary">Comprar Ingresso</a>
+            </div>
+        {% else %}
+            <div class="card-footer">
+                <p class="text-center mb-0">Faça login para comprar ingressos.</p>
+                <a href="{% url 'login' %}" class="btn btn-secondary mt-2">Login</a>
+            </div>
+        {% endif %}
     </div>
 </div>
 {% endblock %}
