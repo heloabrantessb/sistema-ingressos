@@ -62,7 +62,7 @@
 
                     <!-- Botão de Ação -->
                     {% if evento.estoque > 0 %}
-                        <a href="{% url 'detalhe_evento' evento.pk %}" class="btn btn-primary w-100 fw-semibold">
+                        <a href="{% url 'detalhe_evento' evento.id %}" class="btn btn-primary w-100 fw-semibold">
                             Garantir Ingresso <i class="bi bi-arrow-right ms-1"></i>
                         </a>
                     {% else %}

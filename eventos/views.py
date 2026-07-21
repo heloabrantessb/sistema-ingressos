@@ -1,12 +1,13 @@
 from django.shortcuts import get_object_or_404, render
 from django.http import HttpResponse
-from .models import Evento, Ingresso
+from .models import Evento, Ingresso 
 
-def listar_eventos(request):
+def index(request):
     eventos = Evento.objects.all()
-    return render(request, 'eventos/lista.html', {'eventos': eventos})
+    context = {'eventos': eventos}
+    return render(request, 'eventos/index.html', context)
 
-def detalhes_evento(request, evento_id):
+def detalhe_evento(request, evento_id):
     evento = Evento.objects.get(id=evento_id)
     return render(request, 'eventos/detalhes_evento.html', {'evento': evento})
 
