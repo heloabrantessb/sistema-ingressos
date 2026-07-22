@@ -19,6 +19,9 @@ class TipoIngresso(models.Model):
     descricao = models.TextField()
     preco = models.DecimalField(max_digits=10, decimal_places=2)
     estoque = models.PositiveIntegerField()
+
+    def __str__(self):
+        return f"{self.nome} - {self.evento.titulo}"
     
 class Comprador(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='comprador')
