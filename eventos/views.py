@@ -1,4 +1,5 @@
 from django.contrib.auth.decorators import login_required
+from django.db.models import Min
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, render, redirect
 from .models import Evento, Ingresso, TipoIngresso 
@@ -8,7 +9,11 @@ def home(request):
 
 def index(request):
     eventos = Evento.objects.all()
-    context = {'eventos': eventos}
+    valor_minimo = 
+    context = {
+        'eventos': eventos,
+        'tipo_ingressos': tipo_ingressos
+    }
     return render(request, 'eventos/index.html', context)
 
 def detalhe_evento(request, evento_id):
@@ -16,7 +21,7 @@ def detalhe_evento(request, evento_id):
     tipo_ingressos = TipoIngresso.objects.filter(evento=evento)
     context = {
         'evento': evento,
-        'tipos_ingresso': tipo_ingressos
+        'tipos_ingresso': tipo_ingressos,
     }
     return render(request, 'eventos/detalhes_evento.html', context)
 

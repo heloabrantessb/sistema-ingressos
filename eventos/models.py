@@ -12,6 +12,12 @@ class Evento(models.Model):
 
     def __str__(self):
         return self.titulo
+
+    def valor_minimo(self):
+        tipo_ingressos = TipoIngresso.objects.filter(evento=self)
+        if tipo_ingressos.exists():
+            return tipo_ingressos.aggregate(models.Min('preco'))['preco__min']
+        return None
     
 class TipoIngresso(models.Model):   
     evento = models.ForeignKey(Evento, on_delete=models.CASCADE)
