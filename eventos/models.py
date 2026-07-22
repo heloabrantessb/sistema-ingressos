@@ -13,7 +13,7 @@ class Evento(models.Model):
     def __str__(self):
         return self.titulo
     
-class TipoIngresso(models.Model):
+class TipoIngresso(models.Model):   
     evento = models.ForeignKey(Evento, on_delete=models.CASCADE)
     nome = models.CharField(max_length=100)
     descricao = models.TextField()
@@ -58,3 +58,9 @@ class Ingresso(models.Model):
 
     def __str__(self):
         return f"Ingresso para {self.pedido.evento.titulo} - Comprador: {self.pedido.comprador.nome_completo}"
+
+class ItemPedido(models.Model):
+    pedido = models.ForeignKey(Pedido, on_delete=models.CASCADE, related_name='itens')
+    tipo_ingresso = models.ForeignKey(TipoIngresso, on_delete=models.PROTECT)
+    quantidade = models.PositiveIntegerField()
+    preco_unitario = models.DecimalField(max_digits=10, decimal_places=2)
