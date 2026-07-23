@@ -33,27 +33,55 @@
 </head>
 <body>
 
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
-        <div class="container">
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a class="nav-link active" href="#">
-                            <i class="bi bi-calendar-event me-1"></i> Eventos
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/admin/" target="_blank">
-                            <i class="bi bi-shield-lock me-1"></i> Painel Admin
-                        </a>
-                    </li>
-                </ul>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
+    <div class="container">
+        <!-- Logo / Nome da Aplicação -->
+        <a class="navbar-brand fw-bold" href="{% url 'index' %}">
+            🎟️ Ticketfy
+        </a>
+
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <!-- Links do lado esquerdo -->
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'index' %}">
+                        <i class="bi bi-calendar-event"></i> Eventos
+                    </a>
+                </li>
+            </ul>
+
+            <!-- Links do lado direito (Autenticação / Conta) -->
+            <div class="d-flex align-items-center gap-2">
+                {% if user.is_authenticated %}
+                    <span class="navbar-text text-white me-2">
+                        Olá, <strong>{{ user.comprador.nome_completo|default:user.username }}</strong>
+                    </span>
+                    
+                    <a href="{% url 'logout' %}" class="btn btn-danger btn-sm">
+                        Sair
+                    </a>
+                {% else %}
+                    <a href="{% url 'login' %}" class="btn btn-outline-light btn-sm">
+                        Entrar
+                    </a>
+                    <a href="{% url 'cadastrar' %}" class="btn btn-primary btn-sm">
+                        Cadastre-se
+                    </a>
+                {% endif %}
+
+                {% if user.is_staff %}
+                    <a href="/admin/" class="btn btn-outline-warning btn-sm ms-2" target="_blank">
+                        Painel Admin
+                    </a>
+                {% endif %}
             </div>
         </div>
-    </nav>
+    </div>
+</nav>
 
     <div class="container mt-3">
         {% if messages %}
