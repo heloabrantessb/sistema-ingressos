@@ -9,10 +9,8 @@ def home(request):
 
 def index(request):
     eventos = Evento.objects.all()
-    valor_minimo = 
     context = {
         'eventos': eventos,
-        'tipo_ingressos': tipo_ingressos
     }
     return render(request, 'eventos/index.html', context)
 

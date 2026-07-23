@@ -14,7 +14,7 @@ class Evento(models.Model):
         return self.titulo
 
     def valor_minimo(self):
-        tipo_ingressos = TipoIngresso.objects.filter(evento=self)
+        tipo_ingressos = TipoIngresso.objects.filter(evento=self.id)
         if tipo_ingressos.exists():
             return tipo_ingressos.aggregate(models.Min('preco'))['preco__min']
         return None
