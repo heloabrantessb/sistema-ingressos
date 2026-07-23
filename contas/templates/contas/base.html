@@ -41,9 +41,9 @@
                             Olá, <strong>{{ user.comprador.nome_completo|default:user.username }}</strong>
                         </span>
                         
-                        <a href="{% url 'meu_perfil' %}" class="btn btn-outline-light btn-sm">
+                        <!-- <a href="{% url 'meu_perfil' %}" class="btn btn-outline-light btn-sm">
                             <i class="bi bi-person-circle"></i> Minha Conta
-                        </a>
+                        </a> -->
                         
                         <a href="{% url 'logout' %}" class="btn btn-danger btn-sm">
                             <i class="bi bi-box-arrow-right"></i> Sair
@@ -52,7 +52,7 @@
                         <a href="{% url 'login' %}" class="btn btn-outline-light btn-sm">
                             Entrar
                         </a>
-                        <a href="{% url 'cadastro' %}" class="btn btn-light btn-sm fw-bold text-primary">
+                        <a href="{% url 'cadastrar' %}" class="btn btn-light btn-sm fw-bold text-primary">
                             Cadastre-se
                         </a>
                     {% endif %}
