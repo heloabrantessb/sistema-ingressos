@@ -11,7 +11,8 @@
 </div>
 
 <div class="row g-4">
-    {% for evento in eventos %}
+    {% for evento in eventos%}
+    {%if evento.status == 'publicado' %}
     <div class="col-12 col-md-6 col-lg-4">
         <div class="card h-100 shadow-sm border-0 rounded-3 overflow-hidden">
 
@@ -64,6 +65,7 @@
             </div>
         </div>
     </div>
+    {% endif %}
     {% empty %}
     <!-- Mensagem para quando não houver eventos cadastrados -->
     <div class="col-12">
