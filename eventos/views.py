@@ -2,17 +2,14 @@ from django.contrib.auth.decorators import login_required
 from django.db.models import Min
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, render, redirect
-from .models import Evento, Ingresso, TipoIngresso 
+from .models import Evento, Ingresso, TipoIngresso
 
 def home(request):
     return redirect('index')
 
 def index(request):
-    eventos = Evento.objects.all()
-    context = {
-        'eventos': eventos,
-    }
-    return render(request, 'eventos/index.html', context)
+    eventos = Evento.objects.order_by('data_evento').filter(status='publicado')
+    return render(request, 'eventos/index.html', {'eventos': eventos})
 
 def detalhe_evento(request, evento_id):
     evento = Evento.objects.get(id=evento_id)
