@@ -26,6 +26,14 @@ class Evento(models.Model):
             return tipo_ingressos.aggregate(models.Min('preco'))['preco__min']
         return None
     
+    def ingressos_disponiveis(self):
+        tipo_ingressos = TipoIngresso.objects.filter(evento=self.id)
+        soma = tipo_ingressos.aggregate(models.Sum('estoque'))['estoque__sum']
+        if soma is None:
+            return 0
+        return soma
+
+
 class TipoIngresso(models.Model):   
     evento = models.ForeignKey(Evento, on_delete=models.CASCADE)
     nome = models.CharField(max_length=100)
