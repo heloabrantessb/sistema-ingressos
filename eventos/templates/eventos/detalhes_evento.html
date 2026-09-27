@@ -36,17 +36,17 @@
                     {% csrf_token %}
 
                     <div class="list-group list-group-flush">
-                        {% for tipo in tipos_ingresso %}
+                        {% for ingresso in tipos_ingresso %}
                         <div
                             class="list-group-item d-flex align-items-center justify-content-between p-3 border-bottom-light">
 
                             <!-- Nome do Tipo de Ingresso + Ícone de Informação -->
                             <div class="d-flex align-items-center gap-2">
-                                <span class="fw-bold text-dark">{{ tipo.nome }}</span>
-                                {% if tipo.descricao %}
+                                <span class="fw-bold text-dark">{{ ingresso.nome }}</span>
+                                {% if ingresso.descricao %}
                                 <i class="bi bi-info-circle-fill text-primary"
                                     style="font-size: 0.9rem; cursor: pointer;" data-bs-toggle="tooltip"
-                                    data-bs-placement="top" title="{{ tipo.descricao }}"></i>
+                                    data-bs-placement="top" title="{{ ingresso.descricao }}"></i>
                                 {% endif %}
                             </div>
 
@@ -54,26 +54,26 @@
                             <div class="d-flex align-items-center gap-4">
                                 <!-- Preço -->
                                 <span class="fw-bold text-dark fs-6">
-                                    R$ {{ tipo.preco|floatformat:2 }}
+                                    R$ {{ ingresso.preco|floatformat:2 }}
                                 </span>
 
-                                {% if tipo.estoque > 0 %}
+                                {% if ingresso.estoque > 0 %}
                                 <div class="d-flex align-items-center rounded bg-light p-1"
                                     style="width: 110px; height: 38px;">
                                     <button type="button"
                                         class="btn btn-sm btn-link text-primary text-decoration-none fw-bold w-100 p-0 fs-5 btn-minus"
-                                        onclick="alterarQuantidade('ingresso_{{ tipo.id }}', -1)">
+                                        onclick="alterarQuantidade('ingresso_{{ ingresso.id }}', -1)">
                                         −
                                     </button>
 
-                                    <input type="number" id="ingresso_{{ tipo.id }}" name="ingressos[{{ tipo.id }}]"
-                                        value="0" min="0" max="{{ tipo.quantidade_disponivel|default:10 }}" readonly
+                                    <input type="number" id="ingresso_{{ ingresso.id }}" name="ingressos[{{ ingresso.id }}]"
+                                        value="0" min="0" max="{{ ingresso.quantidade_disponivel|default:10 }}" readonly
                                         class="form-control form-control-sm text-center border-0 bg-transparent fw-bold p-0 text-dark"
                                         style="box-shadow: none;">
 
                                     <button type="button"
                                         class="btn btn-sm btn-link text-primary text-decoration-none fw-bold w-100 p-0 fs-5 btn-plus"
-                                        onclick="alterarQuantidade('ingresso_{{ tipo.id }}', 1)">
+                                        onclick="alterarQuantidade('ingresso_{{ ingresso.id }}', 1)">
                                         +
                                     </button>
                                 </div>
@@ -99,9 +99,9 @@
                     <div class="p-3 bg-light border-top d-flex justify-content-end">
                         {% if evento.ingressos_disponiveis > 0 %}
                             {% if user.is_authenticated %}
-                            <a href=# class="btn btn-primary px-4 fw-bold">
+                            <button type="submit" class="btn btn-primary px-4 fw-bold">
                                 Comprar Ingressos
-                            </a>
+                            </button>
                             {% else %}
                             <a href="{% url 'login' %}" class="btn btn-primary px-4 fw-bold">
                                 Faça Login para Comprar Ingressos
