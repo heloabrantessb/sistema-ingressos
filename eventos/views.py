@@ -1,8 +1,10 @@
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.db.models import Min
+from django.db import transaction
+from django.db.models import Min, Sum
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, render, redirect
-from .models import Evento, Ingresso, TipoIngresso
+from .models import Evento, Ingresso, TipoIngresso, Comprador, Pedido, ItemPedido
 
 def home(request):
     return redirect('index')
@@ -26,34 +28,64 @@ def detalhe_evento(request, evento_id):
 
 @login_required
 def iniciar_compra(request, evento_id):
-    """
-        if houver escolha de tipo de ingresso
-            verificar se todas as constraints estão válidas
-            mandar para a página de criar_pedido
-            verificar se o usuário atual já possui o maximo de ingressos
-            por categoria ao considerar sessoes de compra anteriores
-
-            se todas as validações passarem
-                diminui o estoque em 1
-                cria pedido com status "PENDENTE"e valor total
-                redirecionar para página de pagamento
-        
-        else 
-            exibir alerta "Selecione um tipo de ingresso" 
-    """
     evento = get_object_or_404(Evento, id=evento_id)
-    tipos_ingresso = TipoIngresso.objects.filter(evento=evento)
     
-    for tipo in tipos_ingresso:
-        quantidade = request.POST.get(f'ingressos[{tipo.id}]', 0)
-
-    if reques.method == 'POST':
+    if request.method == 'POST':
+        tipos_ingresso = TipoIngresso.objects.filter(evento=evento, ativo=True)
         
-        ingressos_pedidos = request.POST.getlist('ingressos')
-
-        if ingressos_pedidos:
-            print("logica")
-
-    
-    
+        comprador, _ = Comprador.objects.get_or_create(user=request.user)
         
+        itens_para_processar = []
+        valor_total_pedido = 0
+        total_ingressos_selecionados = 0
+
+        for tipo in tipos_ingresso:
+            qtd_ingresso = request.POST.get(f'ingressos[{tipo.id}]', '0')
+            try:
+                qtd = int(qtd_str)
+            except ValueError:
+                qtd = 0
+
+            if qtd > 0:
+                if qtd > tipo.estoque:
+                    messages.error(request, f"Estoque insuficiente para o ingresso '{tipo.nome}'. Restantes: {tipo.estoque}.")
+                    return redirect('detalhe_evento', evento_id=evento.id)
+
+                total_ingressos_selecionados += qtd
+                valor_subtotal = tipo.preco * qtd
+                valor_total_pedido += valor_subtotal
+                itens_para_processar.append((tipo, qtd))
+
+        if total_ingressos_selecionados == 0:
+            messages.warning(request, "Selecione um tipo de ingresso")
+            return redirect('detalhe_evento', evento_id=evento.id)
+
+        with transaction.atomic():
+            pedido = Pedido.objects.create(
+                comprador=comprador,
+                evento=evento,
+                status=Pedido.Status.PENDENTE,
+                valor_total=valor_total_pedido
+            )
+
+            for tipo, qtd in itens_para_processar:
+                tipo.estoque -= qtd
+                tipo.save()
+
+                ItemPedido.objects.create(
+                    pedido=pedido,
+                    tipo_ingresso=tipo,
+                    quantidade=qtd,
+                    preco_unitario=tipo.preco
+                )
+
+                for _ in range(qtd):
+                    Ingresso.objects.create(
+                        pedido=pedido,
+                        tipo_ingresso=tipo
+                    )
+
+        messages.success(request, f"Pedido #{pedido.id} iniciado com sucesso!")
+        return redirect('detalhe_evento', evento_id=evento.id)
+
+    return redirect('detalhe_evento', evento_id=evento.id)
